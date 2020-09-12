@@ -1,7 +1,23 @@
 const mongoose = require('mongoose');
 
-let schema = mongoose.Schema({
+const transactionSchema = mongoose.Schema({
+  category:  {
+    type: String,
+    require: true
+  },
+  day: {
+    type: Number,
+    require: true
+  },
   description: {
+    type: String,
+    require: true
+  },
+  month: {
+    type: Number,
+    require: true
+  },
+  type: {
     type: String,
     require: true
   },
@@ -9,19 +25,7 @@ let schema = mongoose.Schema({
     type: Number,
     require: true
   },
-  category:  {
-    type: String,
-    require: true
-  },
   year:  {
-    type: Number,
-    require: true
-  },
-  month: {
-    type: Number,
-    require: true
-  },
-  day: {
     type: Number,
     require: true
   },
@@ -32,13 +36,9 @@ let schema = mongoose.Schema({
   yearMonthDay: {
     type: String,
     require: true
-  },
-  type: {
-    type: String,
-    require: true
-  },
+  }
 });
 
-const TransactionModel = mongoose.model('transaction', schema);
+const transactionModel = mongoose.model('transactions', transactionSchema);
 
-module.exports = TransactionModel;
+module.exports = transactionModel;
