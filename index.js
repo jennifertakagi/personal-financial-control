@@ -31,6 +31,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
+app.get('/api/', (_, response) => {
+  response.send({
+    message: 'Welcome to Personal Financial Control API!'
+  })
+})
+
 app.use('/api/transaction', routes);
 
 const { DB_CONNECTION } = process.env;
