@@ -4,7 +4,7 @@ const TransactionController = require('../controller/TransactionController');
 
 transactionRouter.post('/new', TransactionController.createTransaction);
 
-transactionRouter.get('/:period', TransactionController.getTransaction);
+transactionRouter.get('/', TransactionController.getTransaction);
 
 transactionRouter.put('/update/:id', TransactionController.updateTransaction);
 

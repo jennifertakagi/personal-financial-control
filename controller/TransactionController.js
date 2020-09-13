@@ -62,7 +62,7 @@ class TransactionController {
    */
   async getTransaction(req, res, next) {
     try {
-      const { period } = req.params;
+      const { period } = req.query;
 
       if (!period) {
           throw new Error('The period (YYYY-MM) parameter is required!');
