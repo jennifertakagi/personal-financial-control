@@ -70,7 +70,10 @@ class TransactionController {
 
       const transactionDB = await transactionModel.find({yearMonth: period});
       
-      res.send(transactionDB);
+      res.send({
+        size: transactionDB.length,
+        transactions: [...transactionDB]
+      });
 
       logger.info(`GET /transaction/:period - ${JSON.stringify(transactionDB)}`);
     } catch (error) {
