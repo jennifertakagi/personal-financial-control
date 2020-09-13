@@ -57,8 +57,7 @@ class TransactionController {
   }
 
   /**
-   * Creates a new transaction based on category, day, description,
-   * month, type, value, year, yearMonth. yearMonthDay, and save it on DB
+   * Gets a transaction based on period
    * @param {Object} request request object
    * @param {Object} response response object
    * @param {Function} next next function
@@ -82,7 +81,28 @@ class TransactionController {
         transactions: transactionsDB
       });
 
-      logger.info(`GET /transaction/:period - ${JSON.stringify(transactionDB)}`);
+      logger.info(`GET /transaction/:period - ${JSON.stringify(transactionsDB)}`);
+    } catch (error) {
+        next(error);
+    }
+  }
+
+  /**
+   * Gets all transaction's periods from database
+   * @param {Object} request request object
+   * @param {Object} response response object
+   * @param {Function} next next function
+   */
+  async getAllPeriodsTransaction(request, response, next) {
+    try {
+      const periodsDB = await servicesDB.getTransactionsPeriodsFromDB();
+      
+      response.send({
+        status: 'ok',
+        periods: periodsDB
+      });
+
+      logger.info(`GET /transaction/allPeriods - ${JSON.stringify(periodsDB)}`);
     } catch (error) {
         next(error);
     }

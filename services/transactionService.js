@@ -35,6 +35,24 @@ async function getTransactionsFromDB(period) {
 }
 
 /**
+ * Gets all transaction's periods from database
+ * @returns {Object{}}
+ */
+async function getTransactionsPeriodsFromDB() {
+  const matchGroup= { $group: {_id: '$yearMonth'} };
+  const matchSort= { $sort: { _id: 1 }};
+  const allPeriodsDB = await TransactionModel.aggregate([matchGroup, matchSort]);
+  const allPeriods = allPeriodsDB.reduce((listPeriods, period) => {
+    if (period && period._id) {
+      listPeriods.push(period._id)
+    }
+    return listPeriods
+  }, []);
+
+  return allPeriods;
+}
+
+/**
  * Updates a transaction on database
  * @param {String} _id transaction's ID
  * @returns {Object} the updated transaction
@@ -48,6 +66,7 @@ async function updateTransactionOnDB(_id, transaction) {
 module.exports = {
   createTransactionOnDB,
   deleteTransactionFromDB,
+  getTransactionsPeriodsFromDB,
   getTransactionsFromDB,
   updateTransactionOnDB
 }
