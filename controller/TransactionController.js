@@ -1,14 +1,14 @@
-const transactionModel = require('../models/TransactionModel');
+const servicesDB = require('../services/transactionService');
 
 class TransactionController {
   /**
    * Creates a new transaction based on category, day, description,
    * month, type, value, year, yearMonth. yearMonthDay, and save it on DB
-   * @param {Object} req request object
-   * @param {Object} res response object
+   * @param {Object} request request object
+   * @param {Object} response response object
    * @param {Function} next next function
    */
-  async createTransaction(req, res, next) {
+  async createTransaction(request, response, next) {
     try {
       const {
         category,
@@ -17,16 +17,15 @@ class TransactionController {
         month,
         type,
         value,
-        year,
-        yearMonth,
-        yearMonthDay
-      } = req.body;
+        year
+      } = request.body;
 
-      if (!category || !day || !description || !month || !type ||
-        !value || ! year || !yearMonth || !yearMonthDay) {
-          throw new Error('These parameters are required: description, value, category, year, month, day, yearMonth, yearMonthDay and type!');
+      if (!category || !day || !description || !month || !type || !value || ! year) {
+        throw new Error('These parameters are required: description, value, category, year, month, day and type!');
       }
 
+      const yearMonth = mountYearMonth(year, month);
+      const yearMonthDay = mountYearMonthDay(yearMonth, day);
       const newDocument = {
         category,
         day,
@@ -39,12 +38,16 @@ class TransactionController {
         yearMonthDay
       };
 
-      const newTransactionDB = await transactionModel.create(newDocument, (err, result) => {
-        if (err) {
-          res.send(err);
-        } else {
-          res.send(`Added new transaction ${result._id} success on DB!`);
-        }
+      const newTransactionDB = await servicesDB.createTransactionOnDB(newDocument);
+      
+      if (!newTransactionDB) {
+        logger.info(`POST /transaction/new - ${JSON.stringify(newTransactionDB)}`);
+        throw new Error('An error occurred while creating a new transaction!');
+      }
+      
+      response.send({
+        status: 'ok',
+        transaction: newTransactionDB
       });
 
       logger.info(`POST /transaction/new - ${JSON.stringify(newTransactionDB)}`);
@@ -56,23 +59,27 @@ class TransactionController {
   /**
    * Creates a new transaction based on category, day, description,
    * month, type, value, year, yearMonth. yearMonthDay, and save it on DB
-   * @param {Object} req request object
-   * @param {Object} res response object
+   * @param {Object} request request object
+   * @param {Object} response response object
    * @param {Function} next next function
    */
-  async getTransaction(req, res, next) {
+  async getTransaction(request, response, next) {
     try {
-      const { period } = req.query;
+      const { period } = request.query;
 
       if (!period) {
-          throw new Error('The period (YYYY-MM) parameter is required!');
+        throw new Error('The period (YYYY-MM) parameter is required!');
       }
 
-      const transactionDB = await transactionModel.find({yearMonth: period});
+      if (!period.match(/^\d{4}\-\d{1,2}$/)) {
+        throw new Error('The period must be on this format: YYYY-MM!');
+      }
+
+      const transactionsDB = await servicesDB.getTransactionsFromDB(period);
       
-      res.send({
-        size: transactionDB.length,
-        transactions: [...transactionDB]
+      response.send({
+        size: transactionsDB.length,
+        transactions: transactionsDB
       });
 
       logger.info(`GET /transaction/:period - ${JSON.stringify(transactionDB)}`);
@@ -84,13 +91,13 @@ class TransactionController {
   /**
    * Updates a new transaction based on category, day, description,
    * month, type, value, year, yearMonth. yearMonthDay, and your ID and save it on DB
-   * @param {Object} req request object
-   * @param {Object} res response object
+   * @param {Object} request request object
+   * @param {Object} response response object
    * @param {Function} next next function
    */
-  async updateTransaction(req, res, next) {
+  async updateTransaction(request, response, next) {
     try {
-      const { id } = req.params;
+      const { id } = request.params;
       const {
         category,
         day,
@@ -98,18 +105,16 @@ class TransactionController {
         month,
         type,
         value,
-        year,
-        yearMonth,
-        yearMonthDay
-      } = req.body;
+        year
+      } = request.body;
 
-      if (!category || !day || !description || !month || !type ||
-        !value || ! year || !yearMonth || !yearMonthDay || !id) {
-          throw new Error('These parameters are required: description, value, category, year, month, day, yearMonth, yearMonthDay, type and ID!');
+      if (!category || !day || !description || !month || !type || !value || ! year || !id) {
+        throw new Error('These parameters are required: description, value, category, year, month, day, type and ID!');
       }
 
-      const query = { _id: id };
-      const updatedDocument = {
+      const yearMonth = mountYearMonth(year, month);
+      const yearMonthDay = mountYearMonthDay(yearMonth, day);
+      const updatedTransaction = {
         category,
         day,
         description,
@@ -120,13 +125,15 @@ class TransactionController {
         yearMonth,
         yearMonthDay
       };
-      const options = { new: true };
 
-      const newTransactionDB = await transactionModel.findByIdAndUpdate(query, updatedDocument, options);
+      const updatedTransactionDB = await servicesDB.updateTransactionOnDB(id, updatedTransaction);
       
-      res.send(newTransactionDB);
+      response.send({
+        status: 'ok',
+        transaction: updatedTransactionDB
+      });
 
-      logger.info(`PUT /transaction/update/:id - ${JSON.stringify(newTransactionDB)}`);
+      logger.info(`PUT /transaction/update/:id - ${JSON.stringify(updatedTransactionDB)}`);
     } catch (error) {
         next(error);
     }
@@ -134,27 +141,55 @@ class TransactionController {
 
   /**
    * Deletes a transaction according to your ID
-   * @param {Object} req request object
-   * @param {Object} res response object
+   * @param {Object} request request object
+   * @param {Object} response response object
    * @param {Function} next next function
    */
-  async deleteTransaction(req, res, next) {
+  async deleteTransaction(request, response, next) {
     try {
-      const { id } = req.params;
+      const { id } = request.params;
 
       if (!id) {
         throw new Error('The ID parameter is required!');
       }
 
-      const deletedTransactionDB = await transactionModel.deleteOne({ _id: id});
+      const deletedTransactionDB = await servicesDB.deleteTransactionFromDB(id);
       
-      res.send(`The ${id} transaction was deleted!`);
+      if (!deletedTransactionDB) {
+        logger.info(`DELETE /transaction/delete/:id - ${JSON.stringify(deletedTransactionDB)}`);
+        throw new Error('An error occurred while deleting the transaction!');
+      }
+
+      response.send({
+        status: 'ok',
+        message: `The ${id} transaction was deleted!`
+      })
 
       logger.info(`DELETE /transaction/delete/:id - ${JSON.stringify(deletedTransactionDB)}`);
     } catch (error) {
         next(error);
     }
   }
+}
+
+/**
+ * Mounts the year month as string
+ * @param {Number} year
+ * @param {Number} month
+ * @returns {String} yearMonth as YYYY-MM
+ */
+function mountYearMonth(year, month) {
+  return `${year}-${String(month).padStart(2,'0')}`;
+}
+
+/**
+ * Mounts the year month day as string
+ * @param {String} yearMonth
+ * @param {Number} day
+ * @returns {String} yearMonthDay as YYYY-MM-DD
+ */
+function mountYearMonthDay(yearMonth, day) {
+  return `${yearMonth}-${String(day).padStart(2,'0')}`;
 }
 
 module.exports = new TransactionController;
