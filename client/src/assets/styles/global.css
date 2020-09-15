@@ -1,0 +1,25 @@
+:root {
+    --color-background: #dfe6e9;
+    --color-text-title: #6c5ce7;
+    --color-text-complement: #a29bfe;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body, #root {
+    height: 100vh;
+}
+
+body {
+    background: var(--color-background);
+}
+
+h1 {
+    color: var(--color-text-title);
+    margin-bottom: 5rem;
+    text-align: center;
+}
