@@ -17,8 +17,8 @@
     "nodemon": "2.0.4"
   },
   "scripts": {
-    "dev": "node index.js",
-    "dev:watch": "nodemon index.js",
+    "start": "node index.js",
+    "server": "nodemon index.js",
     "clean": "rm package-lock.json && rm -Rf node_modules",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
