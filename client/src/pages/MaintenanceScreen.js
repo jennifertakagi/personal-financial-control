@@ -18,7 +18,7 @@ export default function MaintenanceScreen({
   const [value, setValue] = useState('');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState(setToday());
-  const [type, setType] = useState('');
+  const [type, setType] = useState('-');
   const [mode, setMode] = useState('INSERTING');
   useEffect(() => {
     if (!transaction) return;
