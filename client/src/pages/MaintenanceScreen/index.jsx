@@ -35,35 +35,40 @@ export default function MaintenanceScreen({ transaction, onCancel, onSave }) {
     setMode('EDITING');
   }, [transaction])
 
-  function handleDescriptionChange(event) {
-    const newDescription = (event && event.target &&
-      event.target.value && event.target.value.trim()) || '';
-    setDescription(newDescription);
-  }
-
-  function handleValueChange(event) {
+  /**
+   * Handles with input's changes, setting state according to type changed
+   * @param {HTMLEvent} event - Event from input
+   * @param {string} typeChanged - Type to be changed 
+   */
+  function handlesInputChanges(event, typeChanged) {
     const newValue = (event && event.target &&
       event.target.value && event.target.value.trim()) || '';
-    setValue(newValue);
+
+    switch (typeChanged) {
+      case 'description':
+        setDescription(newValue);
+        break;
+      case 'value':
+        setValue(newValue);
+        break;    
+      case 'category':
+        setCategory(newValue);
+        break;        
+      case 'date':
+        setDate(newValue);
+        break;
+      case 'type':
+        setType(newValue);
+        break;  
+      default:
+        break;
+    }
   }
 
-  function handleCategoryChange(event) {
-    const newCategory = (event && event.target &&
-      event.target.value && event.target.value.trim()) || '';
-    setCategory(newCategory);
-  }
-
-  function handleDateChange(event) {
-    const newDate = (event && event.target &&
-      event.target.value && event.target.value.trim()) || '';
-    setDate(newDate);
-  }
-
-  function handleTypeChange(event) {
-    const newType = (event && event.target && event.target.value) || '';
-    setType(newType);
-  }
-
+  /**
+   * Handles with value's changed, setting the value's state
+   * @param {HTMLEvent} event 
+   */
   function handleSaveClick(event) {
     const newTransaction = {
       _id: transaction ? transaction._id : null,
@@ -78,25 +83,25 @@ export default function MaintenanceScreen({ transaction, onCancel, onSave }) {
   }
 
   return (
-    <div>
-      <div style={{ marginBottom: '20px' }}>
+    <div id="maintenance-screen">
+      <div className="type-box">
         <span>
           <Input
             type="radio"
             label="Expense"
             value="-"
             checked={ type === '-' }
-            onChange={ handleTypeChange }
+            onChange={ (event) =>  handlesInputChanges(event, 'type') }
             name="expense_earning"
           />
         </span>
-        <span style={{ marginLeft: '30px' }}>
+        <span>
           <Input
             type="radio"
             label="Earning"
             value='+'
             checked={ type === '+' }
-            onChange={ handleTypeChange }
+            onChange={ (event) =>  handlesInputChanges(event, 'type') }
             name="expense_earning"
           />
         </span>
@@ -105,43 +110,45 @@ export default function MaintenanceScreen({ transaction, onCancel, onSave }) {
         type="text"
         label="Description:"
         value={ description }
-        onChange={ handleDescriptionChange }
+        onChange={ (event) =>  handlesInputChanges(event, 'description') }
         id="inputDescription"
       />
       <Input
         type="text"
         label="Value:"
         value={ value }
-        onChange={ handleValueChange }
+        onChange={ (event) =>  handlesInputChanges(event, 'value') }
         id="inputValue"
       />
       <Input
         type="text"
         label="Category:"
         value={ category }
-        onChange={ handleCategoryChange }
+        onChange={ (event) =>  handlesInputChanges(event, 'category') }
         id="inputCategory"
       />
       <Input
         type="date"
         label="Date:"
         value={ date }
-        onChange={ handleDateChange }
+        onChange={ (event) =>  handlesInputChanges(event, 'date') }
         id="inputDate"
       />
 
-      <Button
-        classes="waves-effect waves-light btn"
-        onClick={ handleSaveClick }
-        label="Save"
-      />
+      <div className="actions-row">
+        <Button
+          classes="waves-effect waves-light btn"
+          onClick={ handleSaveClick }
+          label="Save"
+        />
 
-      <Button
-        classes="waves-effect waves-light btn red darken-4"
-        styles={{ marginLeft: '10px' }}
-        onClick={ onCancel }
-        label="Cancel"
-      />
+        <Button
+          classes="waves-effect waves-light btn red darken-4"
+          styles={{ marginLeft: '10px' }}
+          onClick={ onCancel }
+          label="Cancel"
+        />
+      </div>
     </div>
   )
 }
