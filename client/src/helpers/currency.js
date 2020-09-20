@@ -5,6 +5,6 @@
  * @param {string} currencyType - Country's type
  * @returns {string} formatted value as currency, e.g: R$ 10,00
  */
-export default function formattedCurrency(value = 0, currencyCountry = 'pt-BR', currencyType = 'BLR') {
-  return value.toLocaleString(currencyCountry, { style: 'currency', currency: currencyType });
+export default function formattedCurrency(value = 0, currencyCountry = 'pt-BR', currencyType = 'BRL') {
+  return value.toLocaleString(currencyCountry, { style: 'currency', currency: currencyType })
 }
