@@ -20,10 +20,8 @@ export default function ListScreen({
   periods,
   transactions
 }) {
-  const { actionsRow, buttonIconStyle, transactionStyle } = styles;
-
   return (
-    <>
+    <div id="list-screen">
       <select
         className="browser-default"
         value={ currentPeriod }
@@ -38,19 +36,17 @@ export default function ListScreen({
         })}
       </select>
 
-      <div style={{ display: 'flex',  marginTop: '10px', marginBottom: '10px' }}>
+      <div className="actions-box">
         <Button
           classes="waves-effect waves-light btn"
           onClick={ onNewTransaction }
           label="+ New Transaction"
-          styles={{ marginTop: '25px' }}
         />
         <Input
           type="text"
           placeholder="Filter by..."
           value={ filteredText }
           onChange={ onFilterChange }
-          styles={{ marginLeft: '20px' }}
         />
       </div>
 
@@ -59,7 +55,8 @@ export default function ListScreen({
 
         return (
           <div
-            style={{ ...transactionStyle, backgroundColor: currentColor }}
+            className="transaction-box"
+            style={{ backgroundColor: currentColor }}
             key={ transaction._id }
           >            
             <span>
@@ -68,18 +65,16 @@ export default function ListScreen({
               { transaction.description } - { formattedCurrency(transaction.value) }
             </span>
 
-            <span style={ actionsRow }>
+            <span className="transactions-actions">
               <Button
                 classes="waves-effect waves-light"
                 onClick={ () => onEditTransaction(transaction._id) }
-                styles={ buttonIconStyle }
                 label="create"
                 icon="material-icons right"
               />
               <Button
                 classes="waves-effect waves-light"
                 onClick={ () => onDeleteTransaction(transaction._id) }
-                styles={ buttonIconStyle }
                 label="delete"
                 icon="material-icons right"
               />
@@ -87,24 +82,6 @@ export default function ListScreen({
           </div>
         )
       })}
-    </>
+    </div>
   )
-}
-
-const styles = {
-  transactionStyle: {
-    padding: '5px',
-    margin: '5px',
-    border: '1px solid lightgray',
-    borderRadius: '5px'
-  },
-  buttonIconStyle: {
-    background: 'transparent',
-    border: 'none',
-    color: '#000000'
-  },
-  actionsRow: {
-    float: 'right',
-    marginLeft: '1rem'
-  }
 }
