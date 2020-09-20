@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import api from './services/api';
+import formattedCurrency from './helpers/currency';
+
 import ListScreen from './pages/ListScreen';
 import MaintenanceScreen from './pages/MaintenanceScreen';
 
@@ -21,11 +23,6 @@ export default function App() {
 
   useEffect(() => {
     getPeriodsFromDB();
-    const newEarning = sumEarning();
-    setTotalEarning(newEarning);
-
-    const newExpenses = sumExpenses();
-    setTotalExpenses(newExpenses);
   }, [])
 
   useEffect(() => {
@@ -46,28 +43,14 @@ export default function App() {
         return transactionDescription.toLowerCase().includes(filteredText);
       })
     }
-    
-    const newEarning = sumEarning();
-    setTotalEarning(newEarning);
-
-    const newExpenses = sumExpenses();
-    setTotalExpenses(newExpenses);
-
     setFilteredTransactions(newFilteredTransactions);
+    setTotalEarning(sumTypesValues(newFilteredTransactions, '+'));
+    setTotalExpenses(sumTypesValues(newFilteredTransactions, '-'));
   }, [transactions, filteredText])
 
-  function sumEarning() {
-    return filteredTransaction.reduce((sum, transaction) => {
-      if (transaction.type === '+') {
-        sum = transaction.value + sum;
-      }
-      return sum
-    }, 0)
-  }
-
-  function sumExpenses() {
-    return filteredTransaction.reduce((sum, transaction) => {
-      if (transaction.type === '-') {
+  function sumTypesValues(listTransactions = [], typeToSum) {
+    return listTransactions.reduce((sum, transaction) => {
+      if (transaction.type === typeToSum) {
         sum = transaction.value + sum;
       }
       return sum
@@ -81,12 +64,8 @@ export default function App() {
       .then(response => {
           const { data = {} } = response;
           setTransactions(data.transactions);
-
-          const newEarning = sumEarning();
-          setTotalEarning(newEarning);
-      
-          const newExpenses = sumExpenses();
-          setTotalExpenses(newExpenses);
+          setTotalEarning(sumTypesValues(data.transactions, '+'));
+          setTotalExpenses(sumTypesValues(data.transactions, '-'));
       });
   }
 
@@ -96,7 +75,6 @@ export default function App() {
         const { data = {} } = response;
         PERIODS.push(...data.periods);
         setCurrentPeriod(PERIODS[0]);
-        
       });
   }
 
@@ -189,9 +167,9 @@ export default function App() {
       <h1>Personal Financial Control</h1>
       <div style={{ display: 'flex', justifyContent: 'space-between'}}>
         <span>Transactions: { filteredTransaction.length }</span>
-        <span>Earnings: { totalEarning }</span>
-        <span>Expenses: { totalExpenses }</span>
-        <span>Balance: { totalEarning - totalExpenses }</span>
+        <span>Earnings: { formattedCurrency(totalEarning) }</span>
+        <span>Expenses: { formattedCurrency(totalExpenses) }</span>
+        <span>Balance: { formattedCurrency(totalEarning - totalExpenses) }</span>
       </div>
       {currentScreen === 'LIST_SCREEN' ? (
         <ListScreen

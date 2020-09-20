@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
+import './styles.css'
+
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+
 function setToday() {
   const date = new Date();
   const year = date.getFullYear();
@@ -9,17 +14,14 @@ function setToday() {
   return `${year}-${month}-${day}`;
 }
 
-export default function MaintenanceScreen({
-  transaction,
-  onCancel,
-  onSave 
-}) {
+export default function MaintenanceScreen({ transaction, onCancel, onSave }) {
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState(setToday());
   const [type, setType] = useState('-');
   const [mode, setMode] = useState('INSERTING');
+
   useEffect(() => {
     if (!transaction) return;
 
@@ -79,99 +81,67 @@ export default function MaintenanceScreen({
     <div>
       <div style={{ marginBottom: '20px' }}>
         <span>
-          <label>
-            <input
-              name="expense_earning"
-              type="radio"
-              checked={ type === '-' }
-              onChange={ handleTypeChange }
-              value="-"
-            />
-            <span>Expense</span>
-          </label>
+          <Input
+            type="radio"
+            label="Expense"
+            value="-"
+            checked={ type === '-' }
+            onChange={ handleTypeChange }
+            name="expense_earning"
+          />
         </span>
         <span style={{ marginLeft: '30px' }}>
-          <label>
-            <input
-              name="expense_earning"
-              type="radio"
-              checked={ type === '+' }
-              onChange={ handleTypeChange }
-              value="+"
-            />
-            <span>Earning</span>
-          </label>
+          <Input
+            type="radio"
+            label="Earning"
+            value='+'
+            checked={ type === '+' }
+            onChange={ handleTypeChange }
+            name="expense_earning"
+          />
         </span>
       </div>
-      <div className="input-field">
-        <input 
-          type="text"
-          value={ description }
-          onChange={ handleDescriptionChange }
-          id="inputDescription"
-        />
-        <label
-          htmlFor="inputDescription"
-          className="active"
-        >
-          Description:
-        </label>
-      </div>
-      <div className="input-field">
-        <input 
-          type="text"
-          value={ value }
-          onChange={ handleValueChange }
-          id="inputValue"
-        />
-        <label
-          htmlFor="inputValue"
-          className="active"
-        >
-          Value:
-        </label>
-      </div>
-      <div className="input-field">
-        <input 
-          type="text"
-          value={ category }
-          onChange={ handleCategoryChange }
-          id="inputCategory"
-        />
-        <label
-          htmlFor="inputCategory"
-          className="active"
-        >
-          Category:
-        </label>
-      </div>
-      <div className="input-field">
-        <input 
-          type="date"
-          value={ date }
-          onChange={ handleDateChange }
-          id="inputDate"
-        />
-        <label
-          htmlFor="inputDate"
-          className="active"
-        >
-          Date:
-        </label>
-      </div>
-      <button
-        className="waves-effect waves-light btn"
+      <Input
+        type="text"
+        label="Description:"
+        value={ description }
+        onChange={ handleDescriptionChange }
+        id="inputDescription"
+      />
+      <Input
+        type="text"
+        label="Value:"
+        value={ value }
+        onChange={ handleValueChange }
+        id="inputValue"
+      />
+      <Input
+        type="text"
+        label="Category:"
+        value={ category }
+        onChange={ handleCategoryChange }
+        id="inputCategory"
+      />
+      <Input
+        type="date"
+        label="Date:"
+        value={ date }
+        onChange={ handleDateChange }
+        id="inputDate"
+      />
+
+      <Button
+        classes="waves-effect waves-light btn"
         onClick={ handleSaveClick }
-      >
-        Save
-      </button>
-      <button
-        className="waves-effect waves-light btn red darken-4"
-        style={{ marginLeft: '10px' }}
+        label="Save"
+      />
+
+      <Button
+        classes="waves-effect waves-light btn red darken-4"
+        styles={{ marginLeft: '10px' }}
         onClick={ onCancel }
-      >
-        Cancel
-      </button>
+        label="Cancel"
+      />
     </div>
   )
 }

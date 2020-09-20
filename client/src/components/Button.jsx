@@ -6,13 +6,11 @@ export default function Button ({
   icon = '',
   label = '',
   onClick,
-  styles = {},
   type = 'button'
 }) {
   return (
     <button
       className={ classes }
-      style={ styles }
       onClick={ onClick }
       type={ type }
     >
@@ -30,6 +28,5 @@ Button.propTypes = {
   icon: PropTypes.string,
   label: PropTypes.string,
   onClick: PropTypes.func.isRequired,
-  styles: PropTypes.object,
   type: PropTypes.string
 }

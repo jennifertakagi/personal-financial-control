@@ -8,7 +8,6 @@ export default function Input ({
   name = '',
   onChange,
   placeholder = '',
-  styles = {},
   type,
   value
 }) {
@@ -21,7 +20,6 @@ export default function Input ({
           checked={ checked }
           onChange={ onChange }
           value={ value }
-          style={ styles }
         />
         <span>{ label }</span>
       </label>
@@ -37,7 +35,6 @@ export default function Input ({
         value={ value }
         onChange={ onChange }
         placeholder={ placeholder }
-        style={ styles }
       />
       <label
         className="active"
@@ -56,7 +53,6 @@ Input.propTypes = {
   name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  styles: PropTypes.object,
   type: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired
 }

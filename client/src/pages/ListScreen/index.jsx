@@ -1,5 +1,11 @@
 import React from 'react'
 
+import formattedCurrency from '../../helpers/currency';
+import './styles.css'
+
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+
 const EARNING_COLOR = '#00b894';
 const EXPENSE_COLOR = '#fab1a0';
 
@@ -32,22 +38,22 @@ export default function ListScreen({
         })}
       </select>
 
-      <input 
-        type="text"
-        placeholder="Filter by..."
-        value={ filteredText }
-        onChange={ onFilterChange }
-        style={{ marginTop: '20px', marginBottom: '20px' }}
-      />
-
-      <div>
-        <button
-          className="waves-effect waves-light btn"
+      <div style={{ display: 'flex',  marginTop: '10px', marginBottom: '10px' }}>
+        <Button
+          classes="waves-effect waves-light btn"
           onClick={ onNewTransaction }
-        >
-            + New Transaction
-        </button>
+          label="+ New Transaction"
+          styles={{ marginTop: '25px' }}
+        />
+        <Input
+          type="text"
+          placeholder="Filter by..."
+          value={ filteredText }
+          onChange={ onFilterChange }
+          styles={{ marginLeft: '20px' }}
+        />
       </div>
+
       {transactions.map(transaction => {
         const currentColor = transaction.type === '+' ? EARNING_COLOR : EXPENSE_COLOR;
 
@@ -59,27 +65,24 @@ export default function ListScreen({
             <span>
               { transaction.yearMonthDay } -{' '}
               <strong>{ transaction.category }</strong> -{' '}
-              { transaction.description } - { transaction.value }
+              { transaction.description } - { formattedCurrency(transaction.value) }
             </span>
 
             <span style={ actionsRow }>
-              <button
-                style={ buttonIconStyle }
-                className="waves-effect waves-light"
-                type="button"
+              <Button
+                classes="waves-effect waves-light"
                 onClick={ () => onEditTransaction(transaction._id) }
-              >
-                <i className="material-icons right">create</i>
-              </button>
-
-              <button
-                style={ buttonIconStyle }
-                className="waves-effect waves-light"
-                type="button"
+                styles={ buttonIconStyle }
+                label="create"
+                icon="material-icons right"
+              />
+              <Button
+                classes="waves-effect waves-light"
                 onClick={ () => onDeleteTransaction(transaction._id) }
-              >
-                <i className="material-icons right">delete</i>
-              </button>
+                styles={ buttonIconStyle }
+                label="delete"
+                icon="material-icons right"
+              />
             </span>
           </div>
         )
@@ -87,7 +90,6 @@ export default function ListScreen({
     </>
   )
 }
-
 
 const styles = {
   transactionStyle: {
@@ -98,7 +100,8 @@ const styles = {
   },
   buttonIconStyle: {
     background: 'transparent',
-    border: 'none'
+    border: 'none',
+    color: '#000000'
   },
   actionsRow: {
     float: 'right',
