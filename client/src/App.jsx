@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import api from './services/api';
 import formattedCurrency from './helpers/currency';
+import sumTypesValues from './helpers/utils';
 
 import ListScreen from './pages/ListScreen';
 import MaintenanceScreen from './pages/MaintenanceScreen';
 
 import './assets/styles/global.css';
+import './styles.css';
 
 const PERIODS = [];
 
@@ -48,27 +50,11 @@ export default function App() {
     setTotalExpenses(sumTypesValues(newFilteredTransactions, '-'));
   }, [transactions, filteredText])
 
-  function sumTypesValues(listTransactions = [], typeToSum) {
-    return listTransactions.reduce((sum, transaction) => {
-      if (transaction.type === typeToSum) {
-        sum = transaction.value + sum;
-      }
-      return sum
-    }, 0)
-  }
 
-  function getTransactionsFromDB(currentPeriod) {
-    if (!currentPeriod) return;
-
-    api.get(`/transaction/?period=${currentPeriod}`)
-      .then(response => {
-          const { data = {} } = response;
-          setTransactions(data.transactions);
-          setTotalEarning(sumTypesValues(data.transactions, '+'));
-          setTotalExpenses(sumTypesValues(data.transactions, '-'));
-      });
-  }
-
+  /**
+   * Gets all transactions' periods from database and
+   * set it on state to show on select to user
+   */
   function getPeriodsFromDB() {
     api.get('/transaction/allPeriods')
       .then(response => {
@@ -78,16 +64,45 @@ export default function App() {
       });
   }
 
+  /**
+   * Gets transactions from database and set it on states,
+   * also get and set the earning and expense's sum
+   * @param {string} currentPeriod - Current period to get transactions 
+   */
+  function getTransactionsFromDB(currentPeriod) {
+    if (!currentPeriod) return;
+
+    api.get(`/transaction/?period=${currentPeriod}`)
+      .then(response => {
+        const { data = {} } = response;
+        setTransactions(data.transactions);
+        setTotalEarning(sumTypesValues(data.transactions, '+'));
+        setTotalExpenses(sumTypesValues(data.transactions, '-'));
+      });
+  }
+
+  /**
+   * Handles with period's changes and update its state
+   * @param {HTMLEvent} event - Period event changes 
+   */
   function handlePeriodChange(event) {
     const newPeriod = (event && event.target && event.target.value) || '';
     setCurrentPeriod(newPeriod);
   }
 
+  /**
+   * Handles with edit's transaction action
+   * @param {HTMLEvent} event - Edit transaction event 
+   */
   function handleEditTransaction(_id) {
     const newSelectedTransaction = filteredTransaction.find(transaction => transaction._id === _id);
     setSelectedTransaction(newSelectedTransaction);
   }
 
+  /**
+   * Handles with deleted transaction action, updating the database
+   * @param {HTMLEvent} event - Deleted transaction event 
+   */
   function handleDeleteTransaction(_id) {
     api.delete(`/transaction/delete/${_id}`)
       .then(response => {
@@ -100,21 +115,34 @@ export default function App() {
       });
   }
 
+  /**
+   * Handles with filter's changes and update its state
+   * @param {HTMLEvent} event - Filter event changes 
+   */
   function handleFilterChange(event) {
     const textFilter = (event && event.target &&
       event.target.value && event.target.value.trim()) || '';
     setFilteredText(textFilter.toLowerCase());
   }
 
+  /**
+   * Handles with new transaction click button
+   */
   function handleNewTransaction() {
     setNewTransaction(true);
   }
 
+  /**
+   * Handles with cancel maintenance click button
+   */
   function handleCancelMaintenance(event) {
     setNewTransaction(false);
     setSelectedTransaction(null);
   }
 
+  /**
+   * Handles with save maintenance click button
+   */
   function handleSaveMaintenance(newTransaction) {
     const { _id } = newTransaction;
 
@@ -163,13 +191,13 @@ export default function App() {
   }
 
   return (
-    <div className="container">
+    <div className="container" id="main-page">
       <h1>Personal Financial Control</h1>
-      <div style={{ display: 'flex', justifyContent: 'space-between'}}>
-        <span>Transactions: { filteredTransaction.length }</span>
-        <span>Earnings: { formattedCurrency(totalEarning) }</span>
-        <span>Expenses: { formattedCurrency(totalExpenses) }</span>
-        <span>Balance: { formattedCurrency(totalEarning - totalExpenses) }</span>
+      <div className="summary-box">
+        <p>Transactions: { filteredTransaction.length }</p>
+        <p className="earning-text">Earnings: { formattedCurrency(totalEarning) }</p>
+        <p className="expenses-text">Expenses: { formattedCurrency(totalExpenses) }</p>
+        <p>Balance: { formattedCurrency(totalEarning - totalExpenses) }</p>
       </div>
       {currentScreen === 'LIST_SCREEN' ? (
         <ListScreen

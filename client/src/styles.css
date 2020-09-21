@@ -1,0 +1,32 @@
+#main-page h1 {
+  color: var(--color-text-title);
+  text-align: center;
+  font-size: 4.8rem;
+}
+
+#main-page .summary-box {
+  display: block;
+  font-size: 1.3rem;
+  text-align: center;
+  color: var(--color-text-title);
+  line-height: 3rem;
+  border: 1px var(--color-text-complement) dotted;
+  margin: 2rem;
+}
+
+#main-page .summary-box .earning-text {
+  color: var(--earning-text);
+}
+
+#main-page .summary-box .expenses-text {
+  color: var(--expenses-text);
+}
+
+@media (min-width: 1170px) {
+  #main-page .summary-box {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+    padding: 1rem;
+  }
+}
