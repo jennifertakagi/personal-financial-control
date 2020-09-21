@@ -6,6 +6,7 @@ import './styles.css'
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Period from '../../components/Period';
+import Spinner from '../../components/Spinner';
 import Summary from '../../components/Summary';
 import Transaction from '../../components/Transaction';
 
@@ -49,16 +50,19 @@ function ListScreen({
         />
       </div>
 
-      {transactions.map(transaction => {
-        return (
-          <Transaction
-            key={ transaction._id }
-            onDeleteTransaction={ onDeleteTransaction }
-            onEditTransaction={ onEditTransaction }
-            transaction={ transaction }
-          />
-        )
-      })}
+      {transactions.length ? 
+        transactions.map(transaction => {
+          return (
+            <Transaction
+              key={ transaction._id }
+              onDeleteTransaction={ onDeleteTransaction }
+              onEditTransaction={ onEditTransaction }
+              transaction={ transaction }
+            />
+          )
+        })
+        : <Spinner />
+      }
     </div>
   )
 }

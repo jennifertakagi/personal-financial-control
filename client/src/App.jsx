@@ -125,7 +125,7 @@ export default function App() {
    * Handles with new transaction click button
    */
   function handleNewTransaction() {
-    setSelectedTransaction([]);
+    setSelectedTransaction({});
     setIsOpen(true);
   }
 

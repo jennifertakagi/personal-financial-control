@@ -9,7 +9,7 @@ function Input ({
   onChange,
   placeholder = '',
   type,
-  value
+  value = ''
 }) {
   if (type === 'radio') {
     return (
@@ -54,7 +54,7 @@ Input.propTypes = {
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   type: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string
 }
 
 export default Input;

@@ -11,13 +11,14 @@ function MaintenanceModal({
   isOpen,
   onCancel,
   onSave,
-  transaction,
+  transaction = {},
 }) {
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState(setToday());
   const [type, setType] = useState('-');
+  const [showIncompleteFieldsMessage, setShowIncompleteFieldsMessage] = useState(false);
 
   useEffect(() => {
     if (!transaction) return;
@@ -65,13 +66,17 @@ function MaintenanceModal({
    * Handles with value's changed, setting the value's state
    * @param {HTMLEvent} event 
    */
-  function handleSaveClick(event) {
+  function handleSaveClick() {
+    if (!description || !value || !type || !date || category) {
+      return setShowIncompleteFieldsMessage(true);
+    }
+
     const newTransaction = {
       _id: transaction ? transaction._id : null,
       description,
       value,
       type,
-      yearMonthDay: date || setToday(),
+      yearMonthDay: date,
       category
     }
 
@@ -103,7 +108,7 @@ function MaintenanceModal({
               name="expense_earning"
               onChange={ (event) =>  handlesInputChanges(event, 'type') }
               type="radio"
-              value='+'
+              value="+"
             />
           </span>
         </div>
@@ -136,6 +141,10 @@ function MaintenanceModal({
           value={ date }
         />
 
+        {showIncompleteFieldsMessage &&
+          <p className="red-text text-darken-2">Please, fill all fields!</p>
+        }
+
         <div className="actions-row">
           <Button
             classes="waves-effect waves-light btn"
@@ -158,7 +167,7 @@ MaintenanceModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
-  transaction: PropTypes.object.isRequired
+  transaction: PropTypes.object
 }
 
 export default MaintenanceModal;
