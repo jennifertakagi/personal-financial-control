@@ -4,7 +4,7 @@ import api from './services/api';
 import { sumTypesValues } from './helpers/utils';
 
 import ListScreen from './pages/ListScreen';
-import MaintenanceScreen from './pages/MaintenanceScreen';
+import MaintenanceModal from './pages/MaintenanceModal';
 
 import './assets/styles/global.css';
 import './styles.css';
@@ -15,12 +15,11 @@ export default function App() {
   const [transactions, setTransactions] = useState([]);
   const [filteredTransaction, setFilteredTransactions] = useState([]);
   const [currentPeriod, setCurrentPeriod] = useState('');
-  const [currentScreen, setCurrentScreen] = useState('LIST_SCREEN');
   const [filteredText, setFilteredText] = useState('');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [newTransaction, setNewTransaction] = useState(false);
   const [totalEarning, setTotalEarning] = useState(0);
   const [totalExpenses, setTotalExpenses] = useState(0);
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     getPeriodsFromDB();
@@ -29,11 +28,6 @@ export default function App() {
   useEffect(() => {
     getTransactionsFromDB(currentPeriod);
   }, [currentPeriod])
-
-  useEffect(() => {
-    const newScreen = (selectedTransaction !== null || newTransaction) ? 'MAINTENANCE_SCREEN' : 'LIST_SCREEN';
-    setCurrentScreen(newScreen);
-  }, [selectedTransaction, newTransaction])
 
   useEffect(() => {
     let newFilteredTransactions = [...transactions];
@@ -96,6 +90,7 @@ export default function App() {
   function handleEditTransaction(_id) {
     const newSelectedTransaction = filteredTransaction.find(transaction => transaction._id === _id);
     setSelectedTransaction(newSelectedTransaction);
+    setIsOpen(true);
   }
 
   /**
@@ -128,15 +123,14 @@ export default function App() {
    * Handles with new transaction click button
    */
   function handleNewTransaction() {
-    setNewTransaction(true);
+    setIsOpen(true);
   }
 
   /**
    * Handles with cancel maintenance click button
    */
   function handleCancelMaintenance(event) {
-    setNewTransaction(false);
-    setSelectedTransaction(null);
+    setIsOpen(false);
   }
 
   /**
@@ -160,9 +154,9 @@ export default function App() {
           if (data.status === 'ok') {
             const newTransactions = [...transactions, data.transaction];
             newTransactions.sort((a, b) => a.yearMonth.localeCompare(b.yearMonthDay));
-
+          
             setTransactions(newTransactions);
-            setNewTransaction(false);
+            setIsOpen(false);
           }
         });
     } else {
@@ -182,8 +176,9 @@ export default function App() {
             const indexTransaction = newTransactions.findIndex(transaction => transaction._id === editedTransaction._id);
             
             newTransactions[indexTransaction] = editedTransaction;
+
             setTransactions(newTransactions);
-            setSelectedTransaction(null);
+            setIsOpen(false);
           }
         });
     }
@@ -192,27 +187,25 @@ export default function App() {
   return (
     <div className="container" id="main-page">
       <h1>Personal Financial Control</h1>
-      {currentScreen === 'LIST_SCREEN' ? (
-        <ListScreen
-          currentPeriod={ currentPeriod }
-          filteredText={ filteredText }
-          onDeleteTransaction={ handleDeleteTransaction }
-          onEditTransaction={ handleEditTransaction }
-          onFilterChange={ handleFilterChange }
-          onNewTransaction={ handleNewTransaction }
-          onPeriodChange={ handlePeriodChange }
-          periods={ PERIODS }
-          transactions={ filteredTransaction }
-          totalEarning={ totalEarning }
-          totalExpenses={ totalExpenses }
-        />
-      ) : (
-        <MaintenanceScreen
-          transaction={ selectedTransaction }
-          onCancel={ handleCancelMaintenance }
-          onSave={ handleSaveMaintenance }
-        />
-      )}
+      <ListScreen
+        currentPeriod={ currentPeriod }
+        filteredText={ filteredText }
+        onDeleteTransaction={ handleDeleteTransaction }
+        onEditTransaction={ handleEditTransaction }
+        onFilterChange={ handleFilterChange }
+        onNewTransaction={ handleNewTransaction }
+        onPeriodChange={ handlePeriodChange }
+        periods={ PERIODS }
+        transactions={ filteredTransaction }
+        totalEarning={ totalEarning }
+        totalExpenses={ totalExpenses }
+      />
+      <MaintenanceModal
+        isOpen={ modalIsOpen }
+        transaction={ selectedTransaction }
+        onCancel={ handleCancelMaintenance }
+        onSave={ handleSaveMaintenance }
+      />
     </div>
   );
 }
