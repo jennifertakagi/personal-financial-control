@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function Input ({
+function Input ({
   checked = false,
   id = '',
   label = '',
@@ -15,10 +15,10 @@ export default function Input ({
     return (
       <label>
         <input
-          name={ name }
-          type={ type }
           checked={ checked }
+          name={ name }
           onChange={ onChange }
+          type={ type }
           value={ value }
         />
         <span>{ label }</span>
@@ -28,13 +28,13 @@ export default function Input ({
   return (
     <div className="input-field">
       <input
-        id={ id }
-        className="validate"
-        type={ type }
         autoFocus
-        value={ value }
+        className="validate"
+        id={ id }
         onChange={ onChange }
         placeholder={ placeholder }
+        type={ type }
+        value={ value }
       />
       <label
         className="active"
@@ -56,3 +56,5 @@ Input.propTypes = {
   type: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired
 }
+
+export default Input;

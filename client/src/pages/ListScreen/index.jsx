@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 
 import './styles.css'
 
@@ -8,7 +9,7 @@ import Period from '../../components/Period';
 import Summary from '../../components/Summary';
 import Transaction from '../../components/Transaction';
 
-export default function ListScreen({
+function ListScreen({
   currentPeriod,
   filteredText,
   onDeleteTransaction,
@@ -28,35 +29,52 @@ export default function ListScreen({
         totalEarning={ totalEarning }
         totalExpenses={ totalExpenses }
       />
-     <Period
-      currentPeriod={ currentPeriod }
-      onPeriodChange={ onPeriodChange }
-      periods={ periods }
-     />
+      <Period
+        currentPeriod={ currentPeriod }
+        onPeriodChange={ onPeriodChange }
+        periods={ periods }
+      />
 
       <div className="actions-box">
         <Button
           classes="waves-effect waves-light btn"
-          onClick={ onNewTransaction }
           label="+ New Transaction"
+          onClick={ onNewTransaction }
         />
         <Input
-          type="text"
-          placeholder="Filter by..."
-          value={ filteredText }
           onChange={ onFilterChange }
+          placeholder="Filter by..."
+          type="text"
+          value={ filteredText }
         />
       </div>
 
       {transactions.map(transaction => {
         return (
           <Transaction
-            transaction={ transaction }
+            key={ transaction._id }
             onDeleteTransaction={ onDeleteTransaction }
             onEditTransaction={ onEditTransaction }
+            transaction={ transaction }
           />
         )
       })}
     </div>
   )
 }
+
+ListScreen.propTypes = {
+  currentPeriod: PropTypes.string.isRequired,
+  filteredText: PropTypes.string.isRequired,
+  onDeleteTransaction: PropTypes.func.isRequired,
+  onEditTransaction: PropTypes.func.isRequired,
+  onFilterChange: PropTypes.func.isRequired,
+  onNewTransaction: PropTypes.func.isRequired,
+  onPeriodChange: PropTypes.func.isRequired,
+  periods: PropTypes.array.isRequired,
+  transactions: PropTypes.array.isRequired,
+  totalEarning: PropTypes.number.isRequired,
+  totalExpenses: PropTypes.number.isRequired
+}
+
+export default ListScreen;

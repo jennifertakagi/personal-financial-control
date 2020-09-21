@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types';
 
 import { setToday } from '../../helpers/utils';
 import './styles.css'
@@ -6,7 +7,7 @@ import './styles.css'
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
-export default function MaintenanceModal({
+function MaintenanceModal({
   isOpen,
   onCancel,
   onSave,
@@ -70,7 +71,7 @@ export default function MaintenanceModal({
       description,
       value,
       type,
-      yearMonthDay: date,
+      yearMonthDay: date || setToday(),
       category
     }
 
@@ -87,69 +88,77 @@ export default function MaintenanceModal({
         <div className="type-box">
           <span>
             <Input
-              type="radio"
-              label="Expense"
-              value="-"
               checked={ type === '-' }
-              onChange={ (event) =>  handlesInputChanges(event, 'type') }
+              label="Expense"
               name="expense_earning"
+              onChange={ (event) =>  handlesInputChanges(event, 'type') }
+              type="radio"
+              value="-"
             />
           </span>
           <span>
             <Input
-              type="radio"
-              label="Earning"
-              value='+'
               checked={ type === '+' }
-              onChange={ (event) =>  handlesInputChanges(event, 'type') }
+              label="Earning"
               name="expense_earning"
+              onChange={ (event) =>  handlesInputChanges(event, 'type') }
+              type="radio"
+              value='+'
             />
           </span>
         </div>
         <Input
-          type="text"
-          label="Description:"
-          value={ description }
-          onChange={ (event) =>  handlesInputChanges(event, 'description') }
           id="inputDescription"
+          label="Description:"
+          onChange={ (event) =>  handlesInputChanges(event, 'description') }
+          type="text"
+          value={ description }
         />
         <Input
-          type="text"
-          label="Value:"
-          value={ value }
-          onChange={ (event) =>  handlesInputChanges(event, 'value') }
           id="inputValue"
-        />
-        <Input
+          label="Value:"
+          onChange={ (event) =>  handlesInputChanges(event, 'value') }
           type="text"
-          label="Category:"
-          value={ category }
-          onChange={ (event) =>  handlesInputChanges(event, 'category') }
-          id="inputCategory"
+          value={ value }
         />
         <Input
-          type="date"
-          label="Date:"
-          value={ date }
-          onChange={ (event) =>  handlesInputChanges(event, 'date') }
+          id="inputCategory"
+          label="Category:"
+          onChange={ (event) =>  handlesInputChanges(event, 'category') }
+          type="text"
+          value={ category }
+        />
+        <Input
           id="inputDate"
+          label="Date:"
+          onChange={ (event) =>  handlesInputChanges(event, 'date') }
+          type="date"
+          value={ date }
         />
 
         <div className="actions-row">
           <Button
             classes="waves-effect waves-light btn"
-            onClick={ handleSaveClick }
             label="Save"
+            onClick={ handleSaveClick }
           />
 
           <Button
             classes="waves-effect waves-light btn red darken-4"
-            styles={{ marginLeft: '10px' }}
-            onClick={ onCancel }
             label="Cancel"
+            onClick={ onCancel }
           />
         </div>
       </form>
     </div>
   )
 }
+
+MaintenanceModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  transaction: PropTypes.object.isRequired
+}
+
+export default MaintenanceModal;

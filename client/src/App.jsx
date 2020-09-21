@@ -192,23 +192,23 @@ export default function App() {
     <div className="container" id="main-page">
       <h1>Personal Financial Control</h1>
       <ListScreen
-        currentPeriod={currentPeriod}
-        filteredText={filteredText}
-        onDeleteTransaction={handleDeleteTransaction}
-        onEditTransaction={handleEditTransaction}
-        onFilterChange={handleFilterChange}
-        onNewTransaction={handleNewTransaction}
-        onPeriodChange={handlePeriodChange}
-        periods={PERIODS}
-        transactions={filteredTransaction}
-        totalEarning={totalEarning}
-        totalExpenses={totalExpenses}
+        currentPeriod={ currentPeriod }
+        filteredText={ filteredText }
+        onDeleteTransaction={ handleDeleteTransaction }
+        onEditTransaction={ handleEditTransaction }
+        onFilterChange={ handleFilterChange }
+        onNewTransaction={ handleNewTransaction }
+        onPeriodChange={ handlePeriodChange }
+        periods={ PERIODS }
+        transactions={ filteredTransaction }
+        totalEarning={ totalEarning }
+        totalExpenses={ totalExpenses }
       />
       <MaintenanceModal
-        isOpen={modalIsOpen}
-        transaction={selectedTransaction}
-        onCancel={handleCancelMaintenance}
-        onSave={handleSaveMaintenance}
+        isOpen={ modalIsOpen }
+        onCancel={ handleCancelMaintenance }
+        onSave={ handleSaveMaintenance }
+        transaction={ selectedTransaction }
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function Period ({
+function Period ({
   currentPeriod = '',
   onPeriodChange,
   periods = []
@@ -9,8 +9,8 @@ export default function Period ({
   return (
     <select
       className="browser-default"
-      value={ currentPeriod }
       onChange={ onPeriodChange }
+      value={ currentPeriod }
     >
       {periods.map(period => {
         return (
@@ -28,3 +28,5 @@ Period.propTypes = {
   onPeriodChange: PropTypes.func.isRequired,
   periods: PropTypes.array
 }
+
+export default Period;
