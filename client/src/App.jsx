@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import api from './services/api';
-import formattedCurrency from './helpers/currency';
-import sumTypesValues from './helpers/utils';
+import { sumTypesValues } from './helpers/utils';
 
 import ListScreen from './pages/ListScreen';
 import MaintenanceScreen from './pages/MaintenanceScreen';
@@ -193,12 +192,6 @@ export default function App() {
   return (
     <div className="container" id="main-page">
       <h1>Personal Financial Control</h1>
-      <div className="summary-box">
-        <p>Transactions: { filteredTransaction.length }</p>
-        <p className="earning-text">Earnings: { formattedCurrency(totalEarning) }</p>
-        <p className="expenses-text">Expenses: { formattedCurrency(totalExpenses) }</p>
-        <p>Balance: { formattedCurrency(totalEarning - totalExpenses) }</p>
-      </div>
       {currentScreen === 'LIST_SCREEN' ? (
         <ListScreen
           currentPeriod={ currentPeriod }
@@ -210,6 +203,8 @@ export default function App() {
           onPeriodChange={ handlePeriodChange }
           periods={ PERIODS }
           transactions={ filteredTransaction }
+          totalEarning={ totalEarning }
+          totalExpenses={ totalExpenses }
         />
       ) : (
         <MaintenanceScreen

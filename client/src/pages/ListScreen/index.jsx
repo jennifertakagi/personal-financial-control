@@ -1,13 +1,11 @@
 import React from 'react'
 
-import formattedCurrency from '../../helpers/currency';
 import './styles.css'
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-
-const EARNING_COLOR = '#00b894';
-const EXPENSE_COLOR = '#fab1a0';
+import Summary from '../../components/Summary';
+import Transaction from '../../components/Transaction';
 
 export default function ListScreen({
   currentPeriod,
@@ -18,10 +16,17 @@ export default function ListScreen({
   onNewTransaction,
   onPeriodChange,
   periods,
-  transactions
+  transactions,
+  totalEarning,
+  totalExpenses
 }) {
   return (
     <div id="list-screen">
+      <Summary
+        filteredTransaction={ transactions }
+        totalEarning={ totalEarning }
+        totalExpenses={ totalExpenses }
+      />
       <select
         className="browser-default"
         value={ currentPeriod }
@@ -51,35 +56,12 @@ export default function ListScreen({
       </div>
 
       {transactions.map(transaction => {
-        const currentColor = transaction.type === '+' ? EARNING_COLOR : EXPENSE_COLOR;
-
         return (
-          <div
-            className="transaction-box"
-            style={{ backgroundColor: currentColor }}
-            key={ transaction._id }
-          >            
-            <span>
-              { transaction.yearMonthDay } -{' '}
-              <strong>{ transaction.category }</strong> -{' '}
-              { transaction.description } - { formattedCurrency(transaction.value) }
-            </span>
-
-            <span className="transactions-actions">
-              <Button
-                classes="waves-effect waves-light"
-                onClick={ () => onEditTransaction(transaction._id) }
-                label="create"
-                icon="material-icons right"
-              />
-              <Button
-                classes="waves-effect waves-light"
-                onClick={ () => onDeleteTransaction(transaction._id) }
-                label="delete"
-                icon="material-icons right"
-              />
-            </span>
-          </div>
+          <Transaction
+            transaction={ transaction }
+            onDeleteTransaction={ onDeleteTransaction }
+            onEditTransaction={ onEditTransaction }
+          />
         )
       })}
     </div>

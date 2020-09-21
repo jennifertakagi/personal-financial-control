@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
+import { setToday } from '../../helpers/utils';
 import './styles.css'
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-
-function setToday() {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-}
 
 export default function MaintenanceScreen({ transaction, onCancel, onSave }) {
   const [description, setDescription] = useState('');
@@ -20,7 +12,6 @@ export default function MaintenanceScreen({ transaction, onCancel, onSave }) {
   const [category, setCategory] = useState('');
   const [date, setDate] = useState(setToday());
   const [type, setType] = useState('-');
-  const [mode, setMode] = useState('INSERTING');
 
   useEffect(() => {
     if (!transaction) return;
@@ -32,7 +23,6 @@ export default function MaintenanceScreen({ transaction, onCancel, onSave }) {
     setCategory(category);
     setDate(yearMonthDay);
     setType(type);
-    setMode('EDITING');
   }, [transaction])
 
   /**
