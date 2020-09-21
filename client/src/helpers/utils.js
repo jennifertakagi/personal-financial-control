@@ -7,7 +7,7 @@
 export function sumTypesValues(listTransactions = [], typeToSum) {
   return listTransactions.reduce((sum, transaction) => {
     if (transaction.type === typeToSum) {
-      sum = transaction.value + sum;
+      sum = Number(transaction.value) + sum;
     }
     return sum
   }, 0)

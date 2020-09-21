@@ -4,6 +4,7 @@ import './styles.css'
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Period from '../../components/Period';
 import Summary from '../../components/Summary';
 import Transaction from '../../components/Transaction';
 
@@ -27,19 +28,11 @@ export default function ListScreen({
         totalEarning={ totalEarning }
         totalExpenses={ totalExpenses }
       />
-      <select
-        className="browser-default"
-        value={ currentPeriod }
-        onChange={ onPeriodChange }
-      >
-        {periods.map(period => {
-          return (
-            <option key={ period }>
-              { period }
-            </option>
-          )
-        })}
-      </select>
+     <Period
+      currentPeriod={ currentPeriod }
+      onPeriodChange={ onPeriodChange }
+      periods={ periods }
+     />
 
       <div className="actions-box">
         <Button

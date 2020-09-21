@@ -21,52 +21,33 @@ export default function App() {
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [modalIsOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    getPeriodsFromDB();
-  }, [])
-
-  useEffect(() => {
-    getTransactionsFromDB(currentPeriod);
-  }, [currentPeriod])
-
-  useEffect(() => {
-    let newFilteredTransactions = [...transactions];
-
-    if (filteredText && filteredText.trim() !== '') {
-      newFilteredTransactions = newFilteredTransactions.filter(transaction => {
-        const transactionDescription = (transaction && transaction.description) || '';
-        return transactionDescription.toLowerCase().includes(filteredText);
-      })
-    }
-    setFilteredTransactions(newFilteredTransactions);
-    setTotalEarning(sumTypesValues(newFilteredTransactions, '+'));
-    setTotalExpenses(sumTypesValues(newFilteredTransactions, '-'));
-  }, [transactions, filteredText])
-
-
   /**
    * Gets all transactions' periods from database and
    * set it on state to show on select to user
    */
   function getPeriodsFromDB() {
     api.get('/transaction/allPeriods')
-      .then(response => {
+      .then((response) => {
         const { data = {} } = response;
         PERIODS.push(...data.periods);
         setCurrentPeriod(PERIODS[0]);
       });
   }
 
+  useEffect(() => {
+    getPeriodsFromDB();
+  }, []);
+
   /**
    * Gets transactions from database and set it on states,
    * also get and set the earning and expense's sum
-   * @param {string} currentPeriod - Current period to get transactions 
+   * @param {string} searchPeriod - Current period to get transactions
    */
-  function getTransactionsFromDB(currentPeriod) {
-    if (!currentPeriod) return;
+  function getTransactionsFromDB(searchPeriod) {
+    if (!searchPeriod) return;
 
-    api.get(`/transaction/?period=${currentPeriod}`)
-      .then(response => {
+    api.get(`/transaction/?period=${searchPeriod}`)
+      .then((response) => {
         const { data = {} } = response;
         setTransactions(data.transactions);
         setTotalEarning(sumTypesValues(data.transactions, '+'));
@@ -74,36 +55,57 @@ export default function App() {
       });
   }
 
+  useEffect(() => {
+    getTransactionsFromDB(currentPeriod);
+  }, [currentPeriod]);
+
+  useEffect(() => {
+    let newFilteredTransactions = [...transactions];
+
+    if (filteredText && filteredText.trim() !== '') {
+      newFilteredTransactions = newFilteredTransactions.filter((transaction) => {
+        const transactionDescription = (transaction && transaction.description) || '';
+        return transactionDescription.toLowerCase().includes(filteredText);
+      });
+    }
+    setFilteredTransactions(newFilteredTransactions);
+    setTotalEarning(sumTypesValues(newFilteredTransactions, '+'));
+    setTotalExpenses(sumTypesValues(newFilteredTransactions, '-'));
+  }, [transactions, filteredText]);
+
   /**
    * Handles with period's changes and update its state
-   * @param {HTMLEvent} event - Period event changes 
+   * @param {HTMLEvent} event - Period event changes
    */
   function handlePeriodChange(event) {
     const newPeriod = (event && event.target && event.target.value) || '';
+
     setCurrentPeriod(newPeriod);
   }
 
   /**
    * Handles with edit's transaction action
-   * @param {HTMLEvent} event - Edit transaction event 
+   * @param {HTMLEvent} event - Edit transaction event
    */
   function handleEditTransaction(_id) {
-    const newSelectedTransaction = filteredTransaction.find(transaction => transaction._id === _id);
+    const newSelectedTransaction = filteredTransaction
+      .find((transaction) => transaction._id === _id);
+
     setSelectedTransaction(newSelectedTransaction);
     setIsOpen(true);
   }
 
   /**
    * Handles with deleted transaction action, updating the database
-   * @param {HTMLEvent} event - Deleted transaction event 
+   * @param {HTMLEvent} event - Deleted transaction event
    */
   function handleDeleteTransaction(_id) {
     api.delete(`/transaction/delete/${_id}`)
-      .then(response => {
+      .then((response) => {
         const { data = {} } = response;
 
         if (data.status === 'ok') {
-          const newTransactions = transactions.filter(transaction => transaction._id !== _id);
+          const newTransactions = transactions.filter((transaction) => transaction._id !== _id);
           setTransactions(newTransactions);
         }
       });
@@ -111,11 +113,11 @@ export default function App() {
 
   /**
    * Handles with filter's changes and update its state
-   * @param {HTMLEvent} event - Filter event changes 
+   * @param {HTMLEvent} event - Filter event changes
    */
   function handleFilterChange(event) {
-    const textFilter = (event && event.target &&
-      event.target.value && event.target.value.trim()) || '';
+    const textFilter = (event && event.target
+      && event.target.value && event.target.value.trim()) || '';
     setFilteredText(textFilter.toLowerCase());
   }
 
@@ -123,13 +125,14 @@ export default function App() {
    * Handles with new transaction click button
    */
   function handleNewTransaction() {
+    setSelectedTransaction([]);
     setIsOpen(true);
   }
 
   /**
    * Handles with cancel maintenance click button
    */
-  function handleCancelMaintenance(event) {
+  function handleCancelMaintenance() {
     setIsOpen(false);
   }
 
@@ -144,17 +147,17 @@ export default function App() {
         ...newTransaction,
         year: Number(newTransaction.yearMonthDay.substring(0, 4)),
         month: Number(newTransaction.yearMonthDay.substring(5, 7)),
-        day: Number(newTransaction.yearMonthDay.substring(8, 10))
+        day: Number(newTransaction.yearMonthDay.substring(8, 10)),
       };
-  
+
       api.post('/transaction/new', insertedTransaction)
-        .then(response => {
+        .then((response) => {
           const { data = {} } = response;
-  
+
           if (data.status === 'ok') {
             const newTransactions = [...transactions, data.transaction];
             newTransactions.sort((a, b) => a.yearMonth.localeCompare(b.yearMonthDay));
-          
+
             setTransactions(newTransactions);
             setIsOpen(false);
           }
@@ -164,17 +167,18 @@ export default function App() {
         ...newTransaction,
         year: Number(newTransaction.yearMonthDay.substring(0, 4)),
         month: Number(newTransaction.yearMonthDay.substring(5, 7)),
-        day: Number(newTransaction.yearMonthDay.substring(8, 10))
+        day: Number(newTransaction.yearMonthDay.substring(8, 10)),
       };
-  
+
       api.put(`/transaction/update/${_id}`, editedTransaction)
-        .then(response => {
+        .then((response) => {
           const { data = {} } = response;
-  
+
           if (data.status === 'ok') {
             const newTransactions = [...transactions];
-            const indexTransaction = newTransactions.findIndex(transaction => transaction._id === editedTransaction._id);
-            
+            const indexTransaction = newTransactions
+              .findIndex((transaction) => transaction._id === editedTransaction._id);
+
             newTransactions[indexTransaction] = editedTransaction;
 
             setTransactions(newTransactions);
@@ -188,25 +192,24 @@ export default function App() {
     <div className="container" id="main-page">
       <h1>Personal Financial Control</h1>
       <ListScreen
-        currentPeriod={ currentPeriod }
-        filteredText={ filteredText }
-        onDeleteTransaction={ handleDeleteTransaction }
-        onEditTransaction={ handleEditTransaction }
-        onFilterChange={ handleFilterChange }
-        onNewTransaction={ handleNewTransaction }
-        onPeriodChange={ handlePeriodChange }
-        periods={ PERIODS }
-        transactions={ filteredTransaction }
-        totalEarning={ totalEarning }
-        totalExpenses={ totalExpenses }
+        currentPeriod={currentPeriod}
+        filteredText={filteredText}
+        onDeleteTransaction={handleDeleteTransaction}
+        onEditTransaction={handleEditTransaction}
+        onFilterChange={handleFilterChange}
+        onNewTransaction={handleNewTransaction}
+        onPeriodChange={handlePeriodChange}
+        periods={PERIODS}
+        transactions={filteredTransaction}
+        totalEarning={totalEarning}
+        totalExpenses={totalExpenses}
       />
       <MaintenanceModal
-        isOpen={ modalIsOpen }
-        transaction={ selectedTransaction }
-        onCancel={ handleCancelMaintenance }
-        onSave={ handleSaveMaintenance }
+        isOpen={modalIsOpen}
+        transaction={selectedTransaction}
+        onCancel={handleCancelMaintenance}
+        onSave={handleSaveMaintenance}
       />
     </div>
   );
 }
-
