@@ -1,34 +1,74 @@
-<p align="left">
-   <img src="docs/logo.png" width="150"/>
+<!-- Inspired by https://github.com/jennifertakagi/personal-financial-control -->
+
+<!-- PROJECT SHIELDS -->
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
+
+
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/jennifertakagi/personal-financial-control">
+    <img src="docs/logo.png" alt="Logo" width="100" height="100">
+  </a>
+
+  <h3 align="center">Personal Financial Control</h3>
+
+  <p align="center">
+    Control your personal finances with this complete app!
+    <br />
+    <a href="https://github.com/jennifertakagi/personal-financial-control"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://personal-financial-control.herokuapp.com/">View Demo</a>
+    ·
+    <a href="https://github.com/jennifertakagi/personal-financial-control/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/jennifertakagi/personal-financial-control/issues">Request Feature</a>
+  </p>
 </p>
 
-# Personal Financial App
 
-> Control your personal finances with this app: https://personal-financial-control.herokuapp.com/ :)
 
-[![Author](https://img.shields.io/badge/author-jennifertakagi-ff9000?style=flat-square)](https://github.com/jennifertakagi)
-[![Languages](https://img.shields.io/github/languages/count/jennifertakagi/personal-financial-control?color=%23ff9000&style=flat-square)](#)
-[![Stars](https://img.shields.io/github/stars/jennifertakagi/personal-financial-control?color=ff9000&style=flat-square)](https://github.com/jennifertakagi/personal-financial-control)
-[![Forks](https://img.shields.io/github/forks/jennifertakagi/personal-financial-control?color=%23ff9000&style=flat-square)](https://github.com/jennifertakagi/personal-financial-controlnetwork/members)
-[![Contributors](https://img.shields.io/github/contributors/jennifertakagi/personal-financial-control?color=ff9000&style=flat-square)](https://github.com/jennifertakagi/personal-financial-control/graphs/contributors)
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
----
 
-# :pushpin: Table of Contents
 
-* [Features](#rocket-features)
-* [UI Documentation](#framed_picture-ui-documentation)
-* [Installation](#construction_worker-installation)
-* [Getting Started](#runner-getting-started)
-* [FAQ](#postbox-faq)
-* [Found a bug? Missing a specific feature?](#bug-issues)
-* [Contributing](#tada-contributing)
-* [License](#closed_book-license)
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-<br />
+[![Product Name Screen Shot][product-screenshot]](https://personal-financial-control.herokuapp.com/)
 
-# :rocket: Features
+An application built on backend and frontend to control financial.
 
+Features:
 * Add new transaction.
 * Edit a existence transaction.
 * Delete a transaction.
@@ -36,49 +76,105 @@
 * Consult transactions by year/month.
 * Check the app on desktop and mobile device.
 
-# :framed_picture: UI Documentation
-This project has a UI Documentation of reusable components, allowing to test them individually.
 
-<p align="left">
-   <img src="docs/personal-financial-control.gif" />
-</p>
+### Built With
 
-# :construction_worker: Installation
+* [React](https://pt-br.reactjs.org/)
+* [Materialize CSS](https://materializecss.com/)
+* [Node JS](https://nodejs.org/en/)
+* [MongoDB](https://www.mongodb.com/)
+* [Mongoose](https://mongoosejs.com/).
 
-**You need to install [Node.js](https://nodejs.org/en/download/) and [NPM](https://www.npmjs.com/) first, then in order to clone the project via HTTPS, run this command:**
 
-```git clone https://github.com/jennifertakagi/personal-financial-control.git```
 
-SSH URLs provide access to a Git repository via SSH, a secure protocol. If you have a SSH key registered in your Github account, clone the project using this command:
+<!-- GETTING STARTED -->
+## Getting Started
 
-```git clone git@github.com:jennifertakagi/personal-financial-control.git```
+### Prerequisites
 
-**Install dependencies**
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
 
-```npm install```
+* yarn
+  ```sh
+  npm install --global yarn
+  ```
 
-# :runner: Getting Started
+### Installation
 
-Run the following command in order to start the application in a development environment:
+1. Clone the repo
+   ```sh
+   git clone https://github.com/jennifertakagi/personal-financial-control.git
+   ```
+2. Install packages
+   ```sh
+   yarn | npm install
+   ```
+3. Run the following command in order to start the application in a development environment:
+   ```sh
+   yarn start | npm run start
+   ```
 
-```npm start```
 
-# :postbox: Faq
 
-**Question:** What are the technologies used in this project?
+<!-- ROADMAP -->
+## Roadmap
 
-**Answer:** The technologies used in this project are [React](https://pt-br.reactjs.org/), [Materialize CSS](https://materializecss.com/),
-[Node JS](https://nodejs.org/en/), [MongoDB](https://www.mongodb.com/) and [Mongoose](https://mongoosejs.com/).
+See the [open issues](https://github.com/jennifertakagi/personal-financial-control/issues) for a list of proposed features (and known issues).
 
-# :bug: Issues
 
-Feel free to **file a new issue** with a respective title and description on the [Personal Financial Control](https://github.com/jennifertakagi/personal-financial-control/issues) repository. If you already found a solution to your problem, **i would love to review your pull request**! Have a look at our [contribution guidelines](https://github.com/jennifertakagi/personal-financial-control/blob/master/CONTRIBUTING.md) to find out about the coding standards.
 
-# :tada: Contributing
+<!-- CONTRIBUTING -->
+## Contributing
 
-Check out the [contributing](https://github.com/jennifertakagi/personal-financial-control/blob/master/CONTRIBUTING.md) page to see the best places to file issues, start discussions and begin contributing.
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-# :closed_book: License
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Released in 2020.
-This project is under the [MIT license](https://github.com/jennifertakagi/personal-financial-control/master/LICENSE).
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+
+
+<!-- CONTACT -->
+## Contact
+
+Jennifer Takagi - [@jennitakagi](https://twitter.com/jennitakagi)
+
+[Check out the demo project](https://personal-financial-control.herokuapp.com/)
+
+
+
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements
+* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
+* [Img Shields](https://shields.io)
+* [Choose an Open Source License](https://choosealicense.com)
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/jennifertakagi/personal-financial-control.svg?style=for-the-badge
+[contributors-url]: https://github.com/jennifertakagi/personal-financial-control/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/jennifertakagi/personal-financial-control.svg?style=for-the-badge
+[forks-url]: https://github.com/jennifertakagi/personal-financial-control/network/members
+[stars-shield]: https://img.shields.io/github/stars/jennifertakagi/personal-financial-control.svg?style=for-the-badge
+[stars-url]: https://github.com/jennifertakagi/personal-financial-control/stargazers
+[issues-shield]: https://img.shields.io/github/issues/jennifertakagi/personal-financial-control.svg?style=for-the-badge
+[issues-url]: https://github.com/jennifertakagi/personal-financial-control/issues
+[license-shield]: https://img.shields.io/github/license/jennifertakagi/personal-financial-control.svg?style=for-the-badge
+[license-url]: https://github.com/jennifertakagi/personal-financial-control/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/jennifertakagi
+[product-screenshot]: docs/personal-financial-control.gif
